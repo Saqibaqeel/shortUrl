@@ -15,12 +15,12 @@ export default function StatsPage() {
   const [copied, setCopied] = useState(false);
   
   // Get backend base URL from environment variable or use default
-  const backendBaseUrl ='http://localhost:3000/urls';
+  const backendBaseUrl ='https://shorturl-708.onrender.com/urls';
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get(`${backendBaseUrl}/stats/${shortUrl}`);
+        const res = await axios.get(`https://shorturl-708.onrender.com/urls/stats/${shortUrl}`);
         setStats(res.data.stats);
         setClicks(res.data.clicks);
       } catch (err) {

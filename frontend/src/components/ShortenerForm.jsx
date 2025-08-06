@@ -15,7 +15,7 @@ export default function ShortenerForm() {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:3000/urls/shorten', { originalUrl });
+      const res = await axios.post('https://shorturl-708.onrender.com/urls/shorten', { originalUrl });
       const shortCode = res.data.shortUrl;
       navigate(`/stats/${shortCode}`);
     } catch (err) {
