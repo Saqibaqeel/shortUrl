@@ -1,27 +1,22 @@
-// src/App.js
+// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import ShortenerForm from './components/ShortenerForm';
+import StatsPage from './components/StatsPage';
 import Footer from './components/Footer';
-import ShortenerPage from './pages/ShortenerPage';
-import StatsPage from './pages/StatsPage';
 
-
-function App() {
+export default function App() {
   return (
     <Router>
-      <div className="d-flex flex-column min-vh-100 min-vw-100">
-        <Navbar />
-        <main className="flex-grow-1 py-4">
-          <Routes>
-            <Route path="/" element={<ShortenerPage />} />
-            <Route path="/stats/:shortUrl" element={<StatsPage />} />
-          </Routes>
-        </main>
-        <Footer />
+      <Navbar />
+      <div className="container mt-4 min-vh-100 min-vw-100 d-flex flex-column">
+        <Routes>
+          <Route path="/" element={<ShortenerForm />} />
+          <Route path="/stats/:shortUrl" element={<StatsPage />} />
+        </Routes>
       </div>
+      <Footer />
     </Router>
   );
 }
-
-export default App;

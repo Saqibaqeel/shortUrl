@@ -1,6 +1,6 @@
 // src/pages/ShortenerPage.js
 import React from 'react';
-import ShortenerForm from '../components/ShortenerForm';
+import ShortenerForm from './ShortenerForm';
 
 export default function ShortenerPage() {
   return (
