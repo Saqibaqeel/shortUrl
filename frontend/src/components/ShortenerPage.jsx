@@ -1,57 +1,91 @@
-// src/pages/ShortenerPage.js
-import React from 'react';
-import ShortenerForm from './ShortenerForm';
+// src/components/ShortenerForm.js
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-export default function ShortenerPage() {
+export default function ShortenerForm() {
+  const [originalUrl, setOriginalUrl] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
+
+  const backendBaseUrl = 'https://shorturl-708.onrender.com/urls';
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const res = await axios.post(
+        `${backendBaseUrl}/shorten`,
+        { originalUrl }
+      );
+      const code = res.data.shortUrl;
+      setSuccess(`Short URL generated: `);
+      setTimeout(() => navigate(`/stats/${code}`), 1500);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to shorten URL');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="container">
-      <div className="row justify-content-center">
-        <div className="col-lg-8">
-          <div className="text-center mb-5">
-            <h1 className="display-5 fw-bold mb-3">Shorten Your URLs</h1>
-            <p className="lead text-muted">
-              Create short, easy-to-share links that you can track
+    <div className="row justify-content-center mt-5">
+      <div className="col-md-8">
+        <div className="card shadow-sm">
+          <div className="card-body">
+            <h3 className="card-title mb-3 text-center">
+              <i className="fas fa-cut text-primary me-2"></i>Shorten Your URL
+            </h3>
+            <p className="text-center text-muted mb-4">
+              Paste a long URL below to generate a short link and track its clicks.
             </p>
-          </div>
-          
-          <ShortenerForm />
-          
-          <div className="row mt-5">
-            <div className="col-md-4 mb-4">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body text-center">
-                  <div className="bg-primary text-white rounded-circle p-3 mb-3 mx-auto">
-                    <i className="fas fa-bolt fa-lg"></i>
-                  </div>
-                  <h5>Instant</h5>
-                  <p className="mb-0">Get shortened URLs in seconds</p>
-                </div>
+            <form onSubmit={handleSubmit}>
+              <div className="input-group mb-3">
+                <span className="input-group-text bg-white">
+                  <i className="fas fa-link text-primary"></i>
+                </span>
+                <input
+                  type="url"
+                  className="form-control"
+                  placeholder="https://example.com/very/long-url"
+                  value={originalUrl}
+                  onChange={(e) => setOriginalUrl(e.target.value)}
+                  required
+                  disabled={loading}
+                />
+                <button
+                  className="btn btn-primary"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <><i className="fas fa-spinner fa-spin me-1"></i>Shortening...</>
+                  ) : (
+                    'Shorten'
+                  )}
+                </button>
               </div>
-            </div>
-            
-            <div className="col-md-4 mb-4">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body text-center">
-                  <div className="bg-primary text-white rounded-circle p-3 mb-3 mx-auto">
-                    <i className="fas fa-shield-alt fa-lg"></i>
-                  </div>
-                  <h5>Secure</h5>
-                  <p className="mb-0">All links are protected and safe</p>
-                </div>
+            </form>
+
+            {error && (
+              <div className="alert alert-danger mt-3" role="alert">
+                <i className="fas fa-exclamation-circle me-2"></i>{error}
               </div>
-            </div>
-            
-            <div className="col-md-4">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body text-center">
-                  <div className="bg-primary text-white rounded-circle p-3 mb-3 mx-auto">
-                    <i className="fas fa-chart-line fa-lg"></i>
-                  </div>
-                  <h5>Analytics</h5>
-                  <p className="mb-0">Track clicks and engagement</p>
+            )}
+
+            {success && (
+              <div className="alert alert-success mt-3 d-flex justify-content-between align-items-center" role="alert">
+                <div>
+                  <i className="fas fa-check-circle me-2"></i>{success}
                 </div>
+                <div className="spinner-border text-success" role="status" />
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
